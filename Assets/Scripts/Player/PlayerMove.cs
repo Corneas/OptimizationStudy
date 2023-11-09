@@ -11,13 +11,38 @@ public class PlayerMove : MonoBehaviour
 
     private Vector3 movePos;
 
-    private void Update()
+    private Coroutine moveCoroutine = null;
+    private WaitForEndOfFrame waitForEndOfFrame = null;
+
+    private void Start() 
     {
-        h = Input.GetAxisRaw("Horizontal");
-        v = Input.GetAxisRaw("Vertical");
+        waitForEndOfFrame = new WaitForEndOfFrame();
+        moveCoroutine = StartCoroutine(Move());
+    }
 
-        movePos = new Vector3(h, v, 0).normalized * Time.deltaTime * moveSpeed;
 
-        transform.Translate(movePos);
+    // private void Update()
+    // {
+    //     h = Input.GetAxisRaw("Horizontal");
+    //     v = Input.GetAxisRaw("Vertical");
+
+    //     movePos = new Vector3(h, v, 0).normalized * Time.deltaTime * moveSpeed;
+
+    //     transform.Translate(movePos);
+    // }
+
+    private IEnumerator Move()
+    {
+        while(true)
+        {
+            h = Input.GetAxisRaw("Horizontal");
+            v = Input.GetAxisRaw("Vertical");
+
+            movePos = new Vector3(h, v, 0).normalized * Time.deltaTime * moveSpeed;
+
+            transform.Translate(movePos);
+
+            yield return waitForEndOfFrame;
+        }
     }
 }
